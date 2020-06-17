@@ -1,7 +1,9 @@
 package com.hyecheon.chapter03
 
 fun main() {
-
+    println(fiboDynamic(10, IntArray(100)))    // 55
+    println(fiboRecursion(10))    // 55
+    require(fiboDynamic(10, IntArray(100)) == fiboRecursion(10))
 }
 
 private fun fiboDynamic(n: Int, fibo: IntArray): Int {
