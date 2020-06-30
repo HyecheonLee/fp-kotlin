@@ -18,6 +18,11 @@ private fun <T> Array<out T>.toFunList(): FunList<T> = when {
     }
 }
 
+fun <T> FunList<T>.toFunStream(): FunStream<T> = when (this) {
+    Nil -> FunStream.Nil
+    else -> FunStream.Cons({ getHead() }, { getTail().toFunStream() })
+}
+
 fun FunList<Double>.product(): Double = when (this) {
     Nil -> 1.0
     is Cons -> if (head == 0.0) 0.0 else head * tail.product()
@@ -106,4 +111,19 @@ tailrec fun <T1, T2, R> FunList<T1>.zipWith(
 ): FunList<R> = when {
     this === Nil || list === Nil -> acc.reverse()
     else -> getTail().zipWith(f, list.getTail(), acc.addHead(f(getHead(), list.getHead())))
+}
+
+tailrec fun IntProgression.toFunList(acc: FunList<Int> = FunList.Nil): FunList<Int> = when {
+    step > 0 -> when {
+        first > last -> acc.reverse()
+        else -> ((first + step)..last step step).toFunList(acc.addHead(first))
+    }
+    else -> when {
+        first >= last -> {
+            IntProgression.fromClosedRange(first + step, last, step).toFunList(acc.addHead(first))
+        }
+        else -> {
+            acc.reverse()
+        }
+    }
 }
